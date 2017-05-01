@@ -1,0 +1,16 @@
+[
+{
+  "modid": "notalib",
+  "name": "Not A Lib",
+  "description": "Shared code for Minecraft mods.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["NotAModder"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
