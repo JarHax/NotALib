@@ -62,6 +62,33 @@ processResources {
     from 'LICENSE'
 }
 
+// Taken from https://github.com/Inventory-Tweaks/inventory-tweaks/blob/develop/build.gradle
+def getGitChangelog = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        def gitHash = System.getenv('GIT_COMMIT')
+        def gitPrevHash = System.getenv('GIT_PREVIOUS_COMMIT')
+        def travisRange = System.getenv('TRAVIS_COMMIT_RANGE')
+        if(gitHash && gitPrevHash) {
+            exec {
+                commandLine 'git', 'log', '--pretty=tformat:%s - %aN', '' + gitPrevHash + '...' + gitHash
+                standardOutput = stdout
+            }
+            return stdout.toString().trim()
+        } else if(travisRange) {
+            exec {
+                commandLine 'git', 'log', '--pretty=tformat:%s - %aN', '' + travisRange
+                standardOutput = stdout
+            }
+            return stdout.toString().trim()
+        } else {
+            return "";
+        }
+    } catch(ignored) {
+        return "";
+    }
+}
+
 String getBuildNumber() {
 
     return System.getenv('BUILD_NUMBER') ? System.getenv('BUILD_NUMBER') : System.getenv('TRAVIS_BUILD_NUMBER') ? System.getenv('TRAVIS_BUILD_NUMBER') : '0';
@@ -81,9 +108,9 @@ task curseforge {
 
         id = "${id_curse}"   
         releaseType = 'alpha'
-
-        addGameVersion "${version_minecraft}"
-        
+        changelog = getGitChangelog()
+        changelogType = 'markdown'
+        addGameVersion "${version_minecraft}"       
         addArtifact(deobfJar)
     }
 }
