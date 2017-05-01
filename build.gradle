@@ -27,7 +27,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 
 version = "${mod_version}" + getBuildNumber()
 group = "${mod_group}"
-archivesBaseName = "${mod_name}"
+archivesBaseName = "${mod_name}-${version_minecraft}"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
