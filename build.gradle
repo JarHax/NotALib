@@ -111,7 +111,7 @@ curseforge {
         changelog = getGitChangelog()
         changelogType = 'markdown'
         addGameVersion "${version_minecraft}"       
-        addArtifact(createDeobf())
+        addArtifact(createDeobf)
     }
 }
 
