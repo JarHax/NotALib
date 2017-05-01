@@ -100,6 +100,18 @@ task createDeobf(type: Jar) {
     classifier = 'deobf'
 }
 
+task createSources(type: Jar, dependsOn: classes) {
+
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task createJavadoc(type: Jar, dependsOn: javadoc) {
+
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
 curseforge {
 
     apiKey = System.getenv('authCurse') ? System.getenv('authCurse') : '0';
@@ -112,10 +124,14 @@ curseforge {
         changelogType = 'markdown'
         addGameVersion "${version_minecraft}"       
         addArtifact(createDeobf)
+        addArtifact(createSources)
+        addArtifact(createJavadoc)
     }
 }
 
 artifacts {
 
     archives createDeobf
+    archives createSources
+    archives createJavadoc
 }
