@@ -11,6 +11,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -153,6 +154,7 @@ public class RegistryHelper {
      */
     public Item registerItem (@Nonnull Item item, @Nonnull String id) {
 
+        item.setRegistryName(this.modid, id);
         item.setUnlocalizedName(this.modid + "." + id.toLowerCase().replace("_", "."));
         GameRegistry.register(item);
         this.items.add(item);
