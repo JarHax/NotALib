@@ -100,7 +100,7 @@ task createDeobf(type: Jar) {
     classifier = 'deobf'
 }
 
-task curseforge {
+curseforge {
 
     apiKey = System.getenv('authCurse') ? System.getenv('authCurse') : '0';
 
