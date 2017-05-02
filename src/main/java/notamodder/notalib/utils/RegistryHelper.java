@@ -15,6 +15,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import notamodder.notalib.item.IVariant;
 
 /**
  * Mods can create new instances of this class, and use it to handle a lot of the registration
@@ -238,7 +239,14 @@ public class RegistryHelper {
     @SideOnly(Side.CLIENT)
     public void registerInventoryModel (@Nonnull Item item) {
 
-        this.registerInventoryModel(item, 0, item.getRegistryName().toString());
+        if (item instanceof IVariant) {
+
+            final IVariant variant = (IVariant) item;
+            this.registerInventoryModel(item, variant.getVariant());
+        }
+
+        else
+            this.registerInventoryModel(item, 0, item.getRegistryName().toString());
     }
 
     /**
@@ -249,7 +257,7 @@ public class RegistryHelper {
      * @param variants An array of variant names in order of meta.
      */
     @SideOnly(Side.CLIENT)
-    public void registerItemModel (@Nonnull Item item, @Nonnull String... variants) {
+    public void registerInventoryModel (@Nonnull Item item, @Nonnull String... variants) {
 
         for (int meta = 0; meta < variants.length; meta++)
             this.registerInventoryModel(item, meta, item.getRegistryName().toString() + "_" + variants[meta]);
