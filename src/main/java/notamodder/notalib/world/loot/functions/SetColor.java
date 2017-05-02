@@ -23,7 +23,15 @@ public class SetColor extends LootFunction {
     private final MCColor color;
 
     /**
-     * Constructs a new LootFunctionColor which uses a random color when applied.
+     * Constructs a new SetColor function, with no conditions.
+     */
+    public SetColor () {
+
+        this(null, new LootCondition[0]);
+    }
+
+    /**
+     * Constructs a new SetColor function which uses a random color when applied.
      *
      * @param conditions The traditional loot conditions.
      */
@@ -33,7 +41,7 @@ public class SetColor extends LootFunction {
     }
 
     /**
-     * Constructs a new LootFunctionColor which uses the specified color when applied.
+     * Constructs a new SetColor function which uses the specified color when applied.
      *
      * @param color The color to use.
      * @param conditions The traditional loot conditions.
