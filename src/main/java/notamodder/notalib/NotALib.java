@@ -11,12 +11,11 @@ import notamodder.notalib.proxy.CommonProxy;
 import notamodder.notalib.world.loot.conditions.BiomeSpecific;
 import notamodder.notalib.world.loot.functions.SetColor;
 
-@Mod(modid = NotALib.MODID, name = NotALib.NAME, version = NotALib.VERSION)
+@Mod(modid = NotALib.MODID, name = NotALib.NAME, version = "@VERSION@")
 public class NotALib {
 
     public static final String MODID = "notalib";
     public static final String NAME = "Not A Lib";
-    public static final String VERSION = "1.0.0.0";
 
     @Mod.Instance(MODID)
     public static NotALib INSTANCE;
