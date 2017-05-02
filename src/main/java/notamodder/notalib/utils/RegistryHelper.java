@@ -197,7 +197,7 @@ public class RegistryHelper {
      * @param block The block to register the model for.
      */
     @SideOnly(Side.CLIENT)
-    public void registerInventoryMode (@Nonnull Block block) {
+    public void registerInventoryModel (@Nonnull Block block) {
 
         this.registerInventoryModel(Item.getItemFromBlock(block));
     }
