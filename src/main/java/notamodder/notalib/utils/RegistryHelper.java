@@ -1,6 +1,13 @@
 package notamodder.notalib.utils;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Nonnull;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -11,11 +18,19 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import notamodder.notalib.item.IVariant;
+import notamodder.notalib.world.loot.LootBuilder;
 
 /**
  * Mods can create new instances of this class, and use it to handle a lot of the registration
@@ -23,7 +38,14 @@ import notamodder.notalib.item.IVariant;
  * names, creative tabs, registry names, and block/itemblock registry, along with some other
  * stuff for models.
  */
+@EventBusSubscriber
 public class RegistryHelper {
+
+    /**
+     * A map of all entries that have been added. This is injected into the loot tables using
+     * {@link net.minecraftforge.event.LootTableLoadEvent}.
+     */
+    private static final Multimap<ResourceLocation, LootBuilder> lootTableEntries = HashMultimap.create();
 
     /**
      * The id of the mod the registry helper instance belongs to.
@@ -39,6 +61,12 @@ public class RegistryHelper {
      * A list of all blocks registered by the helper instance.
      */
     private final NonNullList<Block> blocks = NonNullList.create();
+
+    /**
+     * A local map of all the entires that have been added. This is on a per instance basis,
+     * used to get mod-specific entries.
+     */
+    private final Map<ResourceLocation, LootBuilder> localLootTableEntries = new HashMap<>();
 
     /**
      * The creative tab used by the mod. This can be null.
@@ -163,6 +191,80 @@ public class RegistryHelper {
             item.setCreativeTab(this.tab);
 
         return item;
+    }
+
+    /**
+     * Creates a new loot entry that will be added to the loot pools when a world is loaded.
+     *
+     * @param location The loot table to add the loot to. You can use
+     *        {@link net.minecraft.world.storage.loot.LootTableList} for convenience.
+     * @param name The name of the entry being added. This will be prefixed with
+     *        {@link #modid}.
+     * @param pool The name of the pool to add the entry to. This pool must already exist.
+     * @param weight The weight of the entry.
+     * @param item The item to add.
+     * @return A builder object. It can be used to fine tune the loot entry.
+     */
+    public LootBuilder addLoot (ResourceLocation location, String name, String pool, int weight, Item item) {
+
+        return this.addLoot(location, new LootBuilder(this.modid + ":" + name, pool, weight, item));
+    }
+
+    /**
+     * Creates a new loot entry that will be added to the loot pools when a world is loaded.
+     *
+     * @param location The loot table to add the loot to. You can use
+     *        {@link net.minecraft.world.storage.loot.LootTableList} for convenience.
+     * @param name The name of the entry being added. This will be prefixed with
+     *        {@link #modid}.
+     * @param pool The name of the pool to add the entry to. This pool must already exist.
+     * @param weight The weight of the entry.
+     * @param quality The quality of the entry. Quality is an optional value which modifies the
+     *        weight of an entry based on the player's luck level. totalWeight = weight +
+     *        (quality * luck)
+     * @param item The item to add.
+     * @param conditions A list of loot conditions.
+     * @param functions A list of loot functions.
+     * @return A builder object. It can be used to fine tune the loot entry.
+     */
+    public LootBuilder addLoot (ResourceLocation location, String name, String pool, int weight, int quality, Item item, List<LootCondition> conditions, List<LootFunction> functions) {
+
+        return this.addLoot(location, new LootBuilder(this.modid + ":" + name, pool, weight, quality, item, conditions, functions));
+    }
+
+    /**
+     * Creates a new loot entry that will be added to the loot pools when a world is loaded.
+     *
+     * @param location The loot table to add the loot to. You can use
+     *        {@link net.minecraft.world.storage.loot.LootTableList} for convenience.
+     * @param builder The loot builder to add.
+     * @return A builder object. It can be used to fine tune the loot entry.
+     */
+    public LootBuilder addLoot (ResourceLocation location, LootBuilder builder) {
+
+        lootTableEntries.put(location, builder);
+        this.localLootTableEntries.put(location, builder);
+        return builder;
+    }
+
+    /**
+     * This is an event hook which is used to inject the loot data to loot tables. This class
+     * is registered with the event bus using the
+     * {@link net.minecraftforge.fml.common.Mod.EventBusSubscriber} class level annotation.
+     * Don't call or use this method yourself!
+     *
+     * @param event The event instance.
+     */
+    @SubscribeEvent
+    public void onTableLoaded (LootTableLoadEvent event) {
+
+        for (final LootBuilder builder : lootTableEntries.get(event.getName())) {
+
+            final LootPool pool = event.getTable().getPool(builder.getPool());
+
+            if (pool != null)
+                pool.addEntry(builder.build());
+        }
     }
 
     /**
