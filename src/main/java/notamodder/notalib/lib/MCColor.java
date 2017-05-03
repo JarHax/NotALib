@@ -100,6 +100,11 @@ public class MCColor extends Color {
     public static final MCColor DYE_WHITE = new MCColor(255, 255, 255);
 
     /**
+     * An array of the vanilla colors.
+     */
+    public static final MCColor[] VANILLA_COLORS = { DYE_BLACK, DYE_RED, DYE_GREEN, DYE_BROWN, DYE_BLUE, DYE_PURPLE, DYE_CYAN, DYE_LIGHT_GRAY, DYE_GRAY, DYE_PINK, DYE_LIME, DYE_YELLOW, DYE_LIGHT_BLUE, DYE_MAGENTA, DYE_ORANGE, DYE_WHITE };
+
+    /**
      * Constructs an MCColor from an ItemStack. Expects the stack to have already been checked
      * for validity.
      *
