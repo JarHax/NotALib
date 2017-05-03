@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class StackUtils {
 
@@ -31,5 +32,19 @@ public final class StackUtils {
             stack.setTagCompound(tag);
 
         return stack;
+    }
+
+    /**
+     * Checks if two stacks are similar enough for crafting. For this to be true, both items
+     * must be empty, or both items must share the same item and meta, or both items must share
+     * the same item, and one of them must have a wildcard meta.
+     *
+     * @param stack1 The first stack.
+     * @param stack2 The second stack.
+     * @return Whether or not the two stacks are similar enough for crafting.
+     */
+    public static boolean areStacksSimilar (@Nonnull ItemStack stack1, @Nonnull ItemStack stack2) {
+
+        return stack1.isEmpty() ? stack2.isEmpty() : stack1.getItem() == stack2.getItem() && (stack1.getMetadata() == OreDictionary.WILDCARD_VALUE || stack2.getMetadata() == OreDictionary.WILDCARD_VALUE || stack1.getMetadata() == stack2.getMetadata());
     }
 }
