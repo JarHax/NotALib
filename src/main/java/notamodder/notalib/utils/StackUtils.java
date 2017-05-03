@@ -29,8 +29,9 @@ public final class StackUtils {
      */
     public static ItemStack prepareStack (@Nonnull ItemStack stack, @Nonnull NBTTagCompound tag) {
 
-        if (!stack.hasTagCompound())
+        if (!stack.hasTagCompound()) {
             stack.setTagCompound(tag);
+        }
 
         return stack;
     }

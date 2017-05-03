@@ -166,8 +166,9 @@ public class RegistryHelper {
         GameRegistry.register(itemBlock, block.getRegistryName());
         this.blocks.add(block);
 
-        if (this.tab != null)
+        if (this.tab != null) {
             block.setCreativeTab(this.tab);
+        }
 
         return block;
     }
@@ -187,8 +188,9 @@ public class RegistryHelper {
         GameRegistry.register(item);
         this.items.add(item);
 
-        if (this.tab != null)
+        if (this.tab != null) {
             item.setCreativeTab(this.tab);
+        }
 
         return item;
     }
@@ -262,8 +264,9 @@ public class RegistryHelper {
 
             final LootPool pool = event.getTable().getPool(builder.getPool());
 
-            if (pool != null)
+            if (pool != null) {
                 pool.addEntry(builder.build());
+            }
         }
     }
 
@@ -315,8 +318,9 @@ public class RegistryHelper {
     @SideOnly(Side.CLIENT)
     public void registerInventoryModel (@Nonnull Block block, @Nonnull String... variants) {
 
-        for (int meta = 0; meta < variants.length; meta++)
+        for (int meta = 0; meta < variants.length; meta++) {
             this.registerInventoryModel(Item.getItemFromBlock(block), meta, block.getRegistryName().toString() + "_" + variants[meta]);
+        }
     }
 
     /**
@@ -346,9 +350,9 @@ public class RegistryHelper {
             final IVariant variant = (IVariant) item;
             this.registerInventoryModel(item, variant.getVariant());
         }
-
-        else
+        else {
             this.registerInventoryModel(item, 0, item.getRegistryName().toString());
+        }
     }
 
     /**
@@ -361,8 +365,9 @@ public class RegistryHelper {
     @SideOnly(Side.CLIENT)
     public void registerInventoryModel (@Nonnull Item item, @Nonnull String... variants) {
 
-        for (int meta = 0; meta < variants.length; meta++)
+        for (int meta = 0; meta < variants.length; meta++) {
             this.registerInventoryModel(item, meta, item.getRegistryName().toString() + "_" + variants[meta]);
+        }
     }
 
     /**

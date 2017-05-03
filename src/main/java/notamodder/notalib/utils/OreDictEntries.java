@@ -150,7 +150,8 @@ public class OreDictEntries {
      */
     public static final void dumpOreDictNames () {
 
-        for (final String name : OreDictionary.getOreNames())
+        for (final String name : OreDictionary.getOreNames()) {
             System.out.println("public static final String " + name.toUpperCase() + " = \"" + name + "\";");
+        }
     }
 }
