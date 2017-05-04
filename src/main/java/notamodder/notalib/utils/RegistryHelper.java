@@ -1,8 +1,6 @@
 package notamodder.notalib.utils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -23,12 +21,13 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import notamodder.notalib.NotALib;
 import notamodder.notalib.item.IVariant;
 import notamodder.notalib.world.loot.LootBuilder;
 
@@ -38,14 +37,7 @@ import notamodder.notalib.world.loot.LootBuilder;
  * names, creative tabs, registry names, and block/itemblock registry, along with some other
  * stuff for models.
  */
-@EventBusSubscriber
 public class RegistryHelper {
-
-    /**
-     * A map of all entries that have been added. This is injected into the loot tables using
-     * {@link net.minecraftforge.event.LootTableLoadEvent}.
-     */
-    private static final Multimap<ResourceLocation, LootBuilder> lootTableEntries = HashMultimap.create();
 
     /**
      * The id of the mod the registry helper instance belongs to.
@@ -66,7 +58,7 @@ public class RegistryHelper {
      * A local map of all the entires that have been added. This is on a per instance basis,
      * used to get mod-specific entries.
      */
-    private final Map<ResourceLocation, LootBuilder> localLootTableEntries = new HashMap<>();
+    private final Multimap<ResourceLocation, LootBuilder> lootTableEntries = HashMultimap.create();
 
     /**
      * The creative tab used by the mod. This can be null.
@@ -82,6 +74,7 @@ public class RegistryHelper {
     public RegistryHelper (@Nonnull String modid) {
 
         this.modid = modid;
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     /**
@@ -244,8 +237,7 @@ public class RegistryHelper {
      */
     public LootBuilder addLoot (ResourceLocation location, LootBuilder builder) {
 
-        lootTableEntries.put(location, builder);
-        this.localLootTableEntries.put(location, builder);
+        this.lootTableEntries.put(location, builder);
         return builder;
     }
 
@@ -260,12 +252,18 @@ public class RegistryHelper {
     @SubscribeEvent
     public void onTableLoaded (LootTableLoadEvent event) {
 
-        for (final LootBuilder builder : lootTableEntries.get(event.getName())) {
+        for (final LootBuilder builder : this.lootTableEntries.get(event.getName())) {
 
             final LootPool pool = event.getTable().getPool(builder.getPool());
 
             if (pool != null) {
+
                 pool.addEntry(builder.build());
+            }
+
+            else {
+
+                NotALib.log.info(String.format("The mod %s tried to add loot to %s but the pool was not found. %s", this.modid, event.getName(), builder.toString()));
             }
         }
     }
