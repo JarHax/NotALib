@@ -348,7 +348,7 @@ public class RegistryHelper {
         if (item instanceof IVariant) {
 
             final IVariant variant = (IVariant) item;
-            this.registerInventoryModel(item, variant.getVariant());
+            this.registerInventoryModel(item, variant.getPrefix(), variant.getVariant());
         }
         else {
             this.registerInventoryModel(item, 0, item.getRegistryName().toString());
@@ -360,13 +360,14 @@ public class RegistryHelper {
      * registry name of the item, plus the variant string for the meta.
      *
      * @param item The item to register models for.
+     * @param prefix Adds a prefix to each of the model variants.
      * @param variants An array of variant names in order of meta.
      */
     @SideOnly(Side.CLIENT)
-    public void registerInventoryModel (@Nonnull Item item, @Nonnull String... variants) {
+    public void registerInventoryModel (@Nonnull Item item, String prefix, @Nonnull String... variants) {
 
         for (int meta = 0; meta < variants.length; meta++) {
-            this.registerInventoryModel(item, meta, item.getRegistryName().toString() + "_" + variants[meta]);
+            this.registerInventoryModel(item, meta, item.getRegistryName().toString() + "_" + prefix + variants[meta]);
         }
     }
 

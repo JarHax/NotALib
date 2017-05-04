@@ -13,4 +13,16 @@ public interface IVariant {
      * @return An array of strings which represent the variants for an item.
      */
     public String[] getVariant ();
+
+    /**
+     * Gets a string which is used to prefix the variants. For example, if you want to have
+     * several fish, you could have fish be the prefix, and the type of fish be the variant
+     * name.
+     *
+     * @return The prefix to add to the variant name.
+     */
+    public default String getPrefix () {
+
+        return "";
+    }
 }
