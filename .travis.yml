@@ -6,7 +6,7 @@ script:
 deploy:
   provider: releases
   api_key: "${authGithub}"
-  file: "*.jar"
+  file: NotALib-*.jar
   skip_cleanup: true
   on:
     tags: false
