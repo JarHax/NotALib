@@ -31,7 +31,7 @@ public abstract class ItemSubType extends Item implements IVariant {
 
         final int meta = stack.getMetadata();
         final String[] variants = this.getVariant();
-        return super.getUnlocalizedName() + "." + this.getPrefix() + (!(meta >= 0 && meta < variants.length) ? variants[0] : variants[meta]);
+        return super.getUnlocalizedName() + "." + this.getPrefix().replace("_", ".") + (!(meta >= 0 && meta < variants.length) ? variants[0] : variants[meta]);
     }
 
     @Override
