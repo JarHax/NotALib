@@ -214,6 +214,12 @@ public class LootBuilder {
      */
     public LootEntryItem build () {
 
-        return new LootEntryItem(this.item, this.weight, this.quality, (LootFunction[]) this.functions.toArray(), (LootCondition[]) this.conditions.toArray(), this.name);
+        return new LootEntryItem(this.item, this.weight, this.quality, this.functions.toArray(new LootFunction[0]), this.conditions.toArray(new LootCondition[0]), this.name);
+    }
+
+    @Override
+    public String toString () {
+
+        return String.format("Name: %s - Pool: %s - Weight: %d - Quality: %d Item: %s", this.name, this.pool, this.weight, this.quality, this.item.getRegistryName());
     }
 }
