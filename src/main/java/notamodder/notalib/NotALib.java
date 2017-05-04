@@ -1,5 +1,7 @@
 package notamodder.notalib;
 
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.fml.common.Mod;
@@ -16,6 +18,7 @@ public class NotALib {
 
     public static final String MODID = "notalib";
     public static final String NAME = "Not A Lib";
+    public static Logger log;
 
     @Mod.Instance(MODID)
     public static NotALib INSTANCE;
@@ -26,6 +29,7 @@ public class NotALib {
     @Mod.EventHandler
     public void preInit (FMLPreInitializationEvent event) {
 
+        log = event.getModLog();
         proxy.preInit(event);
     }
 
