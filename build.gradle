@@ -97,6 +97,17 @@ String getBuildNumber() {
     return System.getenv('BUILD_NUMBER') ? System.getenv('BUILD_NUMBER') : System.getenv('TRAVIS_BUILD_NUMBER') ? System.getenv('TRAVIS_BUILD_NUMBER') : '0';
 }
 
+if (JavaVersion.current().isJava8Compatible()) {
+
+    allprojects {
+
+        tasks.withType(Javadoc) {
+
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
 task createDeobf(type: Jar) {
 
     from sourceSets.main.output
