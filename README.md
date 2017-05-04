@@ -2,7 +2,7 @@
 NotALib is a library mod which contains shared code for minecraft mods. This mod is intended to be used for just my mods, although other mod devs are more than welcome to use it as well. This mod is open source, under the LGPL 2.1 license, so please feel free to take advantage of that if you don't want to hard dep on this mod. 
 
 ## Building
-This project is currently using CurseForge's Maven. This may change in the future. To add this project as a dependency using gradle, add the following repository to the repository list. 
+This project is currently using CurseForge's Maven. This may change in the future. To add this project as a dependency using gradle, add the following repository to the repository list. Alternatively, you can use [JitPack](https://jitpack.io/) which is a bit more thought out that Curse's maven system.
 
 ```
 repositories {
