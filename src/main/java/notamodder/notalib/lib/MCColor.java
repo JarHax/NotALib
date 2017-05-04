@@ -7,6 +7,9 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
 /**
  * This class is an extension of the AWT Color class. It adds several things which make working
@@ -116,6 +119,29 @@ public class MCColor extends Color {
     }
 
     /**
+     * Constructs an MCColor from a position in the world. Expects the position to have already
+     * been checked for validity.
+     *
+     * @param world The World.
+     * @param pos A position in the world.
+     */
+    public MCColor (IBlockAccess world, BlockPos pos) {
+
+        this(world.getTileEntity(pos));
+    }
+
+    /**
+     * Constructs an MCColor from a TileEntity. Expects the TileEntity to have already been
+     * checked for validity.
+     *
+     * @param tile The TileEntity to construct a color from.
+     */
+    public MCColor (TileEntity tile) {
+
+        this(tile.getTileData());
+    }
+
+    /**
      * Constructs an MCColor from an NBTTagCompound. Expects the tag to have already been
      * checked for validity.
      *
@@ -201,6 +227,32 @@ public class MCColor extends Color {
     public static boolean isAcceptable (@Nonnull ItemStack stack) {
 
         return !stack.isEmpty() && stack.hasTagCompound() && isAcceptable(stack.getTagCompound());
+    }
+
+    /**
+     * Checks if a tile entity at a given position in the world is acceptable. Check
+     * {@link #isAcceptable(TileEntity)} for more info.
+     *
+     * @param world The world to check in.
+     * @param pos The pos to check at.
+     * @return Whether or not the TileEntity was acceptable.
+     */
+    public static boolean isAcceptable (@Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+
+        return isAcceptable(world.getTileEntity(pos));
+    }
+
+    /**
+     * Checks if a tile entity is acceptable. For a TileEntity to be acceptable, it must not be
+     * null or invalid, and must have an NBTTagCompound which is deemed acceptable by
+     * {@link #isAcceptable(NBTTagCompound)}.
+     *
+     * @param tile The TileEntity to check.
+     * @return Whether or not the TileEntity was acceptable.
+     */
+    public static boolean isAcceptable (@Nonnull TileEntity tile) {
+
+        return tile != null && !tile.isInvalid() && isAcceptable(tile.getTileData());
     }
 
     /**
