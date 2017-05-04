@@ -5,8 +5,8 @@ script:
   - ./gradlew clean build curseforge
 deploy:
   provider: releases
-  api_key: ${authGithub}
-  file: *.jar
+  api_key: "${authGithub}"
+  file: "*.jar"
   skip_cleanup: true
   on:
     tags: true
